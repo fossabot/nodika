@@ -1,0 +1,13 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "study_done.thanks"|trans }}{% endblock %}
+{% block description %}{{ "study_done.thanks_description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_person %}
+
+{% trans_default_domain "administration_organisation" %}
+
+{% block single_content %}
+    <h3>{{ "study_done.thanks"|trans }}</h3>
+    <p>{{ "study_done.thanks_description"|trans }}</p>
+    <p>{{ "study_done.person_id"|trans }}: {{ person.id }}</p>
+{% endblock %}

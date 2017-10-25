@@ -1,0 +1,36 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}{{ "analyze.title"|trans }}{% endblock %}
+{% block description %}{{ "analyze.description"|trans }}{% endblock %}
+
+{% trans_default_domain "static" %}
+
+{% set show_login = true %}
+{% set show_dashboard = false %}
+{% set color_class = globals_color_class_organisation %}
+
+{% block content %}
+    <section class="introduction">
+        <div class="container index-container default-color">
+            <h1>{{ "analyze.log"|trans }}</h1>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>key</th>
+                    <th>value</th>
+                    <th>occurred at</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for entry in logs %}
+                    <tr>
+                        <td>{{ entry.key }}</td>
+                        <td>{{ entry.value }}</td>
+                        <td>{{ entry.occurredAtDateTime|date("d.m.Y H:i:s") }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}

@@ -21,6 +21,7 @@ navigation:
   login: login
   go_back: zurück
   register: registrieren
+  go_to_setup: zum Setup
 
 help:
   help: Hilfe

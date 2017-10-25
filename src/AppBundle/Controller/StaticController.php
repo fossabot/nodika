@@ -14,6 +14,7 @@ use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Newsletter;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Person;
+use AppBundle\Entity\UserEventLog;
 use AppBundle\Form\Newsletter\RegisterForPreviewType;
 use Faker\Factory;
 use Symfony\Component\Form\FormInterface;
@@ -115,12 +116,17 @@ class StaticController extends BaseController
     }
 
     /**
-     * @Route("/stop", name="study_exit_point")
+     * @Route("/analyze/{person}", name="static_analyze")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function stopAction(Request $request)
+    public function analyzeAction(Request $request, Person $person)
     {
-        return $this->redirectToRoute("administration_organisation_setup", []);
+        /* @var UserEventLog[¨$logs */
+        $logs = $this->getDoctrine()->getRepository("AppBundle:UserEventLog")->findBy(["person" => $person->getId()], ["occurredAtDateTime" => "ASC"]);
+
+        return $this->renderNoBackUrl(
+            'static/analyze.html.twig', ["logs" => $logs], "this is the homepage"
+        );
     }
 }

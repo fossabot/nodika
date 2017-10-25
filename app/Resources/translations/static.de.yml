@@ -89,3 +89,8 @@ error:
   500: Ein kritischer Fehler ist bei der Ausführung Ihrer Anfrage aufgetreten. Probieren sie es am Besten einfach noch einmal. Besteht das Problem weiterhin, schreiben Sie uns eine E-Mail an
   500_email: info@nodika.ch
   back_to_homepage: Hier geht's zurück zur Starteite
+
+analyze:
+  title: Analisierung
+  description: Anlysiert den Benutzer
+  log: Log

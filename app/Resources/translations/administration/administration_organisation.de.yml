@@ -53,13 +53,13 @@ setup:
   setup_step_4: Einstellungen anpassen
   setup_step_4_description: Verändern Sie die Standarteinstellungen um die Anwendungen spezifischen Bedürfnissen anzupassen
   setup_step_4_action: zu den Einstellungen
-  setup_step_5: Praxen einladen
-  setup_step_5_description: Senden Sie eine E-Mail an Ihre Praxen damit sie sich hier registrieren können
-  setup_step_5_action: Praxen einladen
+  setup_step_5: Einrichtung abschliessen
+  setup_step_5_description: Sind Sie fertig mit der Einrichtung, und zufrieden mit dem Resultat, können Sie hier Ihre Organisation speichern. Sie können danach keine Änderungen mehr vornehmen
+  setup_step_5_action: speichern und beenden
   setup_step_done: (erledigt)
   setup_step_voluntary: (freiwillig)
-  five_steps: Fünf Schritte zur vollständigen Einrichtung
-  five_steps_description: Sind alle diese fünf Schritte erledigt können Sie die Anwendung bereits in vollem Umfang nutzen.
+  five_steps: Vier Schritte zur vollständigen Einrichtung
+  five_steps_description: Sind alle diese Schritte erledigt ist die Einrichtung der Anwendung abgeschlossen.
   setup: Organisation einrichten
   setup_description: Lesen Sie zuerst alle Schritte durch, das gibt Ihnen einen groben Überblick über die Funktionen der Anwendung.
 
@@ -131,6 +131,7 @@ members_invite:
       Der Administrator dankt.
   successful:
     emails_send: Die Einladung wurde an %count% Praxen versandt
+  not_finished_yet: Die Einrichtung ist noch nicht abgeschlossen. Kehren Sie hier zurück sobald Sie die anderen Punkte des Setups erledigt haben
 
 members_invite_preview:
   title: E-Mail versenden
@@ -145,3 +146,9 @@ members_invite_preview:
   free_2_replace: FREE_2_REPLACE
   free_3_replace: FREE_3_REPLACE
   send_messages_action: E-Mails versenden
+
+study_done:
+  thanks: Danke
+  thanks_description: Danke für die Teilnahme im Experiment. Bitte zeigen Sie diese Nachricht dem Experimentleiter
+  user_id: Benutzer Id
+  person_id: Person Id

@@ -382,4 +382,20 @@ class OrganisationController extends BaseController
             $this->generateUrl("administration_organisation_administer", ["organisation" => $organisation->getId()])
         );
     }
+
+    /**
+     * @Route("/{organisation}/finish", name="study_exit_point")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function stopAction(Request $request, Organisation $organisation)
+    {
+        $arr["organisation"] = $organisation;
+        $arr["person"] = $this->getUser()->getPerson();
+        return $this->renderWithBackUrl(
+            'administration/organisation/study_done.html.twig',
+            $arr,
+            $this->generateUrl("homepage")
+        );
+    }
 }

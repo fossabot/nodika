@@ -10,8 +10,10 @@ namespace AppBundle\Security;
 
 
 use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\UserEventLog;
 use AppBundle\Security\Base\BaseUserProvider;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,10 +24,15 @@ class FrontendUserProvider extends BaseUserProvider
      * @var RegistryInterface $registry
      */
     private $registry;
+    /**
+     * @var RequestContext
+     */
+    private $context;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(RegistryInterface $registry, RequestContext $context)
     {
         $this->registry = $registry;
+        $this->context = $context;
     }
 
     /**
@@ -44,6 +51,24 @@ class FrontendUserProvider extends BaseUserProvider
     {
         $user = $this->registry->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $username]);
         if ($user != null) {
+            //resolve path infos
+            $path = $this->context->getPathInfo();
+            $method = $this->context->getMethod();
+
+            if (strpos($path, "analyze") === false) {
+                //create new event
+                $event = new UserEventLog();
+                $event->setPerson($user->getPerson());
+                $event->setKey("request logged");
+                $event->setOccurredAtDateTime(new \DateTime());
+                $event->setValue($method . ": " . $path);
+
+                // log event
+                $mng = $this->registry->getManager();
+                $mng->persist($event);
+                $mng->flush();
+            }
+
             return $user;
         }
 
