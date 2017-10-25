@@ -16,3 +16,8 @@ production:
   <<: *base
   stage: production
   branch: master
+  
+usability:
+  <<: *base
+  stage: usability
+  branch: usability-testing
