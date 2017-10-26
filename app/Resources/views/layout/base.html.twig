@@ -18,6 +18,16 @@
     <meta name="description" content="{{ description }}">
     <base href="/" target="_self">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i" rel="stylesheet">
+
+    <script type="text/javascript">
+        window._mfq = window._mfq || [];
+        (function() {
+            var mf = document.createElement("script");
+            mf.type = "text/javascript"; mf.async = true;
+            mf.src = "//cdn.mouseflow.com/projects/dcec0431-ad6f-4fe8-9b8c-cb5096602c65.js";
+            document.getElementsByTagName("head")[0].appendChild(mf);
+        })();
+    </script>
 </head>
 <body>
 <!--[if lte IE 9]>
@@ -45,16 +55,6 @@
             {% if not ("setup" in app.request.attributes.get('_route')) and organisation is defined %}
                 <a href="{{ path("administration_organisation_setup", {"organisation" : organisation.id}) }}"
                    class="{{ color_class }} go-button">{{ "navigation.go_to_setup"|trans({}, "content_base") }}</a>
-            {% endif %}
-            {% if show_login is defined %}
-                <a href="{{ path("access_register") }}"
-                   class="{{ color_class }} go-button">{{ "navigation.register"|trans({}, "content_base") }}</a>
-                <a href="{{ path("dashboard_index") }}"
-                   class="{{ color_class }} go-button">{{ "navigation.login"|trans({}, "content_base") }}</a>
-            {% endif %}
-            {% if show_dashboard and false %}
-                <a href="{{ path("dashboard_index") }}"
-                   class="{{ color_class }} go-button">{{ "navigation.dashboard"|trans({}, "content_base") }}</a>
             {% endif %}
         </div>
     </div>
