@@ -1,20 +1,79 @@
 {% extends 'layout/base.html.twig' %}
 
 {% block content %}
+    {% set primary = block('primary_content') %}
+    {% set secondary = block('secondary_content') %}
     <section class="content {{ color_class }}">
         {% include "layout/parts/menu.html.twig" %}
         {% include "layout/parts/flashbag.html.twig" %}
-        <div class="container index-container default-color">
-            <div class="row">
-                <div class="col-md-6">
-                    {% block primary_content %}
-                    {% endblock %}
-                </div>
-                <div class="col-md-6">
-                    {% block secondary_content %}
-                    {% endblock %}
+        {% if group_style == 1 %}
+            <div class="container index-container default-color">
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ primary|raw }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ secondary|raw }}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% elseif group_style == 2 %}
+            {% if secondary|trim != "" %}
+                <div class="container index-container">
+                    <div class="row">
+                        <div class="col-md-6 default-color group-2-padding-left">
+                            {{ primary|raw }}
+                        </div>
+                        <div class="col-md-6 reduced-color group-2-padding-right">
+                            {{ secondary|raw }}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="container index-container default-color">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ primary|raw }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% elseif group_style == 3 %}
+            {% if secondary|trim != "" %}
+                <div class="container index-container relative-anchor default-color">
+                    <div class="row">
+                        <div class="col-md-12 primary-content">
+                            {{ primary|raw }}
+                        </div>
+                        <div class="hidden col-md-6 secondary-content">
+                            {{ secondary|raw }}
+                        </div>
+                        <div class="help-button">
+                            <a href="#">{{ "help.help"|trans({}, "content_base") }}</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="container index-container default-color">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ primary|raw }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% elseif group_style == 4 %}
+
+            <div class="container index-container default-color">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ primary|raw }}
+                    </div>
+                    <div class="col-md-6 hidden">
+                        {{ secondary|raw }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </section>
 {% endblock %}

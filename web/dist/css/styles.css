@@ -10769,6 +10769,45 @@ blockquote.testimonial footer cite {
   content: "\e920";
 }
 
+.group-2-padding-left {
+  padding-left: 40px;
+  padding-top: 40px;
+  margin-left: -40px;
+  margin-top: -40px; }
+
+.group-2-padding-right {
+  padding-left: 20px;
+  padding-top: 40px;
+  margin-top: -40px; }
+
+.reduced-color {
+  background-color: rgba(239, 239, 239, 0.7);
+  color: #555555; }
+
+.relative-anchor {
+  position: relative; }
+
+.help-button {
+  cursor: pointer;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+  -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+  background-color: rgba(255, 255, 255, 0.7); }
+
+.help-button.pressed {
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16);
+  -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16);
+  background-color: rgba(255, 255, 255, 0.7); }
+
 .titanic {
   float: none; }
 

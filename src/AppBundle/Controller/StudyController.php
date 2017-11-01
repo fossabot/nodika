@@ -27,12 +27,54 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 class StudyController extends BaseController
 {
     /**
+     * @Route("/group/{id}", name="study_set_group")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function groupAction(Request $request, $id)
+    {
+        $request->getSession()->set("group", $id);
+
+        return $this->renderNoBackUrl(
+            'static/study_start.twig', ["group" => $id], "this is the homepage"
+        );
+    }
+
+    /**
+     * @Route("/demo/start", name="study_start_demo")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function demoStartAction(Request $request)
+    {
+        $request->getSession()->set("beta", "active");
+
+        return $this->redirectToRoute("homepage");
+    }
+
+    /**
+     * @Route("/demo/end", name="study_end_demo")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function demoEndAction(Request $request)
+    {
+        $request->getSession()->remove("beta");
+
+        return $this->redirectToRoute("homepage");
+    }
+
+    /**
      * @Route("/start", name="study_entry_point")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function startAction(Request $request)
     {
+        if (!$request->getSession()->has("group")) {
+            return $this->redirectToRoute("homepage");
+        }
+
         $id = uniqid();
         $email = $id . "@nodika.ch";
         $faker = Factory::create("de_CH");
@@ -41,6 +83,7 @@ class StudyController extends BaseController
         $person->setEmail($email);
         $person->setGivenName($faker->name);
         $person->setFamilyName($faker->lastName);
+        $person->setStudyGroup((int)$request->getSession()->get("group"));
 
         $user = FrontendUser::createFromPerson($person);
         $user->setEmail($email);

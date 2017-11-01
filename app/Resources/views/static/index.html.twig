@@ -13,7 +13,13 @@
     <h2>{{ "index.study.hello"|trans }}</h2>
     <p class="h2-description">{{ "index.study.hello_description"|trans }}</p>
 
-    <p>
-        <a href="{{ path('study_entry_point') }}">{{ "index.study.start_study"|trans }}</a>
-    </p>
+    <div class="row">
+    {% for i in 1..4 %}
+        <div class="col-md-3">
+            <p>
+                <a class="btn btn-primary" href="{{ path('study_set_group', {"id" : i}) }}">{{ "index.study.group_button"|trans }} {{ i }}</a>
+                </p>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

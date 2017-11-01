@@ -2,4 +2,5 @@
 function boot() {
     boot_general_usability();
     boot_navigation();
+    boot_study();
 }

@@ -1,0 +1,29 @@
+{% extends 'primary_secondary_content_base.html.twig' %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "static" %}
+
+{% set show_login = true %}
+{% set show_dashboard = false %}
+{% set color_class = globals_color_class_organisation %}
+
+{% block primary_content %}
+    <h2>{{ "index.start_study.group_chosen"|trans }} {{ group }} {{ "index.start_study.group_chosen_part_2"|trans }}</h2>
+    <p class="h2-description">{{ "index.start_study.click_below"|trans }}</p>
+
+    <p>
+        <a href="{{ path('study_entry_point') }}">{{ "index.start_study.start_study"|trans }}</a>
+    </p>
+{% endblock %}
+
+{% block secondary_content %}
+    {% if app.session.get('beta') == "active" %}
+        <h3>{{ "index.start_study.test"|trans }}</h3>
+
+        <p>
+            {{ "index.start_study.test_part_2"|trans }}
+        </p>
+    {% endif %}
+{% endblock %}

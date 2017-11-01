@@ -82,8 +82,15 @@ index:
   thanks_for_contact_form: 'Vielen Dank für die Kontaktaufnahme. Wir melden uns.'
   study:
     hello: Wilkommen!
-    hello_description: Ist dir deine Aufgabe klar, kannst du nun die Studie beginnen. Klicke unten auf Einloggen, und richte deine Organisation ein
+    hello_description: Ist dir deine Aufgabe klar, kannst du nun die Studie beginnen. Klicke auf deine Gruppe (diese findest du auf dem Begleitblatt. Bist du dir nicht sicher, frage den Experimentleiter
+    group_button: Gruppe
+  start_study:
+    group_chosen: Du hast die Gruppe
+    group_chosen_part_2: ausgewählt
+    click_below: Ist dies korrekt? Dann klicke unten auf Einloggen, und richte deine Organisation ein
     start_study: Einloggen
+    test: Test
+    test_part_2: Please Ignore
 
 error:
   title: Fehler

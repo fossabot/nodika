@@ -21,13 +21,22 @@
 
     <script type="text/javascript">
         window._mfq = window._mfq || [];
-        (function() {
+        (function () {
             var mf = document.createElement("script");
-            mf.type = "text/javascript"; mf.async = true;
+            mf.type = "text/javascript";
+            mf.async = true;
             mf.src = "//cdn.mouseflow.com/projects/dcec0431-ad6f-4fe8-9b8c-cb5096602c65.js";
             document.getElementsByTagName("head")[0].appendChild(mf);
         })();
     </script>
+
+    <style>
+        {% if app.session.get('group') is defined %}
+        {% set group_style = app.session.get('group') %}
+        {% else  %}
+        {% set group = 1 %}
+        {% endif %}
+    </style>
 </head>
 <body>
 <!--[if lte IE 9]>
@@ -70,6 +79,9 @@
             </div>
             <div class="col-md-offset-7 col-md-3 align-right">
                 version 2017.4 - usability
+                {% if app.session.get('group') is defined %}
+                    - group {{ app.session.get('group') }}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -86,7 +98,11 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108619658-1"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
 
     gtag('config', 'UA-108619658-1');

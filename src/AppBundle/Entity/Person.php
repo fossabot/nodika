@@ -32,6 +32,13 @@ class Person extends BaseEntity
     use CommunicationTrait;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $studyGroup = 1;
+
+    /**
      * @var Organisation[]
      *
      * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="leaders")
@@ -197,5 +204,21 @@ class Person extends BaseEntity
     public function setFrontendUser($frontendUser)
     {
         $this->frontendUser = $frontendUser;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStudyGroup()
+    {
+        return $this->studyGroup;
+    }
+
+    /**
+     * @param int $studyGroup
+     */
+    public function setStudyGroup($studyGroup)
+    {
+        $this->studyGroup = $studyGroup;
     }
 }
