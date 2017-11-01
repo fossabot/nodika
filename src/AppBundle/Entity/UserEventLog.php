@@ -104,7 +104,7 @@ class UserEventLog extends BaseEntity
     /**
      * @return \DateTime
      */
-    public function getOccurredAtDateTime(): \DateTime
+    public function getOccurredAtDateTime()
     {
         return $this->occurredAtDateTime;
     }

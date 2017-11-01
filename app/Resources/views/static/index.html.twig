@@ -1,4 +1,4 @@
-{% extends 'layout/base.html.twig' %}
+{% extends 'list_content_base.html.twig' %}
 
 {% block title %}{{ "index.title"|trans }}{% endblock %}
 {% block description %}{{ "index.description"|trans }}{% endblock %}
@@ -9,35 +9,11 @@
 {% set show_dashboard = false %}
 {% set color_class = globals_color_class_organisation %}
 
-{% block content %}
-    <section class="introduction">
-        <div class="container index-container default-color">
-            <div class="row">
-                <div class="color-title col-md-4">
-                    <h2>{{ "index.introduction.header"|trans }}</h2>
-                    <p class="h2-description">{{ "index.introduction.header_description"|trans }}</p>
-                </div>
-                <div class="color-content col-md-offset-2 col-md-6">
-                    <p>{{ "index.introduction.paragraph_1"|trans }}</p>
-                    <p>{{ "index.introduction.paragraph_2"|trans }}</p>
-                    <p><a href="{{ path("access_register") }}">{{ "index.introduction.register_action"|trans }}</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="features">
-        <div class="container index-container default-color">
-            <div class="row">
-                <div class="color-title col-md-4">
-                    <h2>{{ "index.features.header"|trans }}</h2>
-                    <p class="h2-description">{{ "index.features.header_description"|trans }}</p>
-                </div>
-                <div class="color-content col-md-offset-2 col-md-6">
-                    <p>
-                        <a href="{{ path('study_entry_point') }}">Start Study</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+{% block list_content_0 %}
+    <h2>{{ "index.study.hello"|trans }}</h2>
+    <p class="h2-description">{{ "index.study.hello_description"|trans }}</p>
+
+    <p>
+        <a href="{{ path('study_entry_point') }}">{{ "index.study.start_study"|trans }}</a>
+    </p>
 {% endblock %}

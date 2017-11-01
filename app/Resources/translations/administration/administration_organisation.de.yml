@@ -148,7 +148,7 @@ members_invite_preview:
   send_messages_action: E-Mails versenden
 
 study_done:
-  thanks: Danke
-  thanks_description: Danke für die Teilnahme im Experiment. Bitte zeigen Sie diese Nachricht dem Experimentleiter
-  user_id: Benutzer Id
-  person_id: Person Id
+  thanks: Nummer notieren
+  thanks_description: Bitte notiere die Nummer unterhalb auf deinem Experimentblatt.
+  identification_id: Identifikationsnummer
+  end_description: Danke! Bewerte nun die gerade erledigte Aufgabe auf deinem Blatt (die Webseite kannst du schliessen)

@@ -1,4 +1,6 @@
-{% extends 'layout/base.html.twig' %}
+{% extends 'list_content_base.html.twig' %}
+
+{% import 'macros/kitchen_sink.html.twig' as kitchen %}
 
 {% block title %}{{ "analyze.title"|trans }}{% endblock %}
 {% block description %}{{ "analyze.description"|trans }}{% endblock %}
@@ -9,28 +11,99 @@
 {% set show_dashboard = false %}
 {% set color_class = globals_color_class_organisation %}
 
-{% block content %}
-    <section class="introduction">
-        <div class="container index-container default-color">
-            <h1>{{ "analyze.log"|trans }}</h1>
-            <table class="table">
-                <thead>
+{% block list_content_0 %}
+    <h1>{{ "analyze.log"|trans }}</h1>
+    <p>{{ "analyze.length"|trans }}: {{ length }} Sekunden</p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>key</th>
+            <th>value</th>
+            <th>occurred at</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entry in logs %}
+            <tr>
+                <td>{{ entry.key }}</td>
+                <td>{{ entry.value }}</td>
+                <td>{{ entry.occurredAtDateTime|date("d.m.Y H:i:s") }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block list_content_1 %}
+    <h1>{{ "entity.plural"|trans({}, "entity_member") }}</h1>
+    <p>{{ "analyze.expected_members"|trans }}</p>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>{{ "name"|trans({}, "trait_thing") }}</th>
+            <th>{{ "description"|trans({}, "trait_thing") }}</th>
+            <th>{{ "email"|trans({}, "trait_communication") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for member in organisation.members %}
+            <tr>
+                <td>{{ member.name }}</td>
+                <td>{{ member.description }}</td>
+                <td>{{ member.email }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block list_content_2 %}
+    <h1>{{ "entity.plural"|trans({}, "entity_event_line") }}</h1>
+    <p>{{ "analyze.expected_event_lines"|trans }}</p>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>{{ "name"|trans({}, "trait_thing") }}</th>
+            <th>{{ "description"|trans({}, "trait_thing") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for eventLine in organisation.eventLines %}
+            <tr>
+                <td>{{ eventLine.name }}</td>
+                <td>{{ eventLine.description }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block list_content_3 %}
+    <h1>{{ "entity.plural"|trans({}, "entity_event") }}</h1>
+    <p>{{ "analyze.expected_events"|trans }}</p>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+            <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
+            <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+            <th>{{ "entity.name"|trans({}, "entity_event_line") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for eventLine in organisation.eventLines %}
+            {% for event in eventLine.events %}
                 <tr>
-                    <th>key</th>
-                    <th>value</th>
-                    <th>occurred at</th>
+                    <td>{{ event.startDateTime|myDateTime }}</td>
+                    <td>{{ event.endDateTime|myDateTime }}</td>
+                    <td>{{ event.member }}</td>
+                    <td>{{ event.eventLine }}</td>
                 </tr>
-                </thead>
-                <tbody>
-                {% for entry in logs %}
-                    <tr>
-                        <td>{{ entry.key }}</td>
-                        <td>{{ entry.value }}</td>
-                        <td>{{ entry.occurredAtDateTime|date("d.m.Y H:i:s") }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

@@ -80,6 +80,10 @@ index:
       Kontaktieren Sie uns!
     contact_form_header: 'Kontaktformular'
   thanks_for_contact_form: 'Vielen Dank für die Kontaktaufnahme. Wir melden uns.'
+  study:
+    hello: Wilkommen!
+    hello_description: Ist dir deine Aufgabe klar, kannst du nun die Studie beginnen. Klicke unten auf Einloggen, und richte deine Organisation ein
+    start_study: Einloggen
 
 error:
   title: Fehler
@@ -94,3 +98,7 @@ analyze:
   title: Analisierung
   description: Anlysiert den Benutzer
   log: Log
+  length: Länge von /start bis /finish
+  expected_members: 'Erwartete Benutzer: '
+  expected_event_lines: 'Erwartete Termingruppen: '
+  expected_events: 'Erwartete Termine: '

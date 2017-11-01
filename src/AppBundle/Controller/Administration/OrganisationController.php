@@ -130,6 +130,7 @@ class OrganisationController extends BaseController
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
 
         $arr["organisation"] = $organisation;
+        $arr["person"] = $this->getUser()->getPerson();
         return $this->renderWithBackUrl(
             'administration/organisation/setup.html.twig',
             $arr + ["setupStatus" => $setupStatus],
@@ -380,22 +381,6 @@ class OrganisationController extends BaseController
             'administration/organisation/events.html.twig',
             $arr + ["eventLineModels" => $eventLineModels],
             $this->generateUrl("administration_organisation_administer", ["organisation" => $organisation->getId()])
-        );
-    }
-
-    /**
-     * @Route("/{organisation}/finish", name="study_exit_point")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function stopAction(Request $request, Organisation $organisation)
-    {
-        $arr["organisation"] = $organisation;
-        $arr["person"] = $this->getUser()->getPerson();
-        return $this->renderWithBackUrl(
-            'administration/organisation/study_done.html.twig',
-            $arr,
-            $this->generateUrl("homepage")
         );
     }
 }
