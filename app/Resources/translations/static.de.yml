@@ -102,8 +102,8 @@ error:
   back_to_homepage: Hier geht's zurück zur Starteite
 
 analyze:
-  title: Analisierung
-  description: Anlysiert den Benutzer
+  title: Auswertung
+  description: Analysiert die Daten des Benutzers
   log: Log
   length: Länge von /start bis /finish
   expected_members: 'Erwartete Benutzer: '
