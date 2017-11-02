@@ -89,8 +89,8 @@ index:
     group_chosen_part_2: ausgewählt
     click_below: Ist dies korrekt? Dann klicke unten auf Einloggen, und richte deine Organisation ein
     start_study: Einloggen
-    test: Test
-    test_part_2: Please Ignore
+    test: Hier würde der Hilfstext stehen
+    test_part_2: Neben dem zusammenfassenden Titel steht hier ein etwas längerer Text, der alle relevanten Aspekte einfach erklärt
 
 error:
   title: Fehler
