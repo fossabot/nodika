@@ -278,4 +278,9 @@ class EventLineGeneration extends BaseEntity
     {
         $this->createdByPerson = $createdByPerson;
     }
+
+    public function getDistributionTypeName()
+    {
+        return DistributionType::getTranslation($this->getDistributionType());
+    }
 }

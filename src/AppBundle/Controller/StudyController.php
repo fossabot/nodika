@@ -133,6 +133,7 @@ class StudyController extends BaseController
     /**
      * @Route("/analyze/{person}", name="static_analyze")
      * @param Request $request
+     * @param Person $person
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function analyzeAction(Request $request, Person $person)
@@ -141,6 +142,7 @@ class StudyController extends BaseController
         /* @var UserEventLog[¨$logs */
         $logs = $this->getDoctrine()->getRepository("AppBundle:UserEventLog")->findBy(["person" => $person->getId()], ["occurredAtDateTime" => "ASC"]);
         $arr["logs"] = $logs;
+        $arr["person"] = $person;
 
         $first = $logs[0];
         $last = null;

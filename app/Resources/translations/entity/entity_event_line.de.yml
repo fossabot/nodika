@@ -5,3 +5,4 @@ entity:
 
 events: Termine
 display_order: Reihenfolge
+distribution_type: 'Algorithmus'
