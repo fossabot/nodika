@@ -9,13 +9,18 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Controller\Administration\Organisation\EventLine\Generate\RoundRobinController;
 use AppBundle\Controller\Base\BaseController;
+use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Newsletter;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\UserEventLog;
+use AppBundle\Enum\DistributionType;
 use AppBundle\Form\Newsletter\RegisterForPreviewType;
+use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
+use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use Faker\Factory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -128,6 +133,95 @@ class StudyController extends BaseController
             $arr,
             $this->generateUrl("homepage")
         );
+    }
+
+    /**
+     * @Route("/analyze/all", name="static_analyze_all")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function analyzeAllAction(Request $request)
+    {
+        /* @var UserEventLog[] $logs */
+        $logs = $this->getDoctrine()->getRepository("AppBundle:UserEventLog")->findBy([], ["occurredAtDateTime" => "ASC"]);
+        /* @var UserEventLog[][] $logsByPerson */
+        $logsByPerson = [];
+        foreach ($logs as $log) {
+            $logsByPerson[$log->getPerson()->getId()][] = $log;
+        }
+
+        $data = [];
+        foreach ($this->getDoctrine()->getRepository("AppBundle:Person")->findAll() as $person) {
+            $row = [];
+            $row[] = $person->getId();
+            $row[] = $person->getStudyGroup();
+
+            if (count($person->getLeaderOf()) > 0) {
+                /* @var Organisation $organisation */
+                $organisation = $person->getLeaderOf()->get(0);
+                $row[] = $organisation->getId();
+
+                /* @var UserEventLog[¨$logs */
+                if (isset($logsByPerson[$person->getId()])) {
+                    $logsOfPerson = $logsByPerson[$person->getId()];
+                    $first = $logsOfPerson[0];
+                    $last = null;
+                    foreach ($logsOfPerson as $log) {
+                        if (strpos($log->getValue(), "/finish") > 0) {
+                            $last = $log;
+                            break;
+                        }
+                    }
+                    if ($last != null)
+                        $row[] = $last->getOccurredAtDateTime()->getTimestamp() - $first->getOccurredAtDateTime()->getTimestamp();
+                    else {
+                        $row[] = "-";
+                    }
+                } else {
+                    $row[] = "-";
+                }
+
+                $row[] = count($organisation->getMembers());
+
+                $generations = [];
+                foreach ($organisation->getEventLines() as $eventLine) {
+                    $generations = array_merge($eventLine->getEventLineGenerations()->toArray(), $generations);
+                }
+                $row[] = count($generations);
+
+                if (count($generations) > 0) {
+
+                    /* @var EventLineGeneration $lastGeneration */
+                    $lastGeneration = $generations[count($generations) - 1];
+                    if ($lastGeneration->getDistributionType() == DistributionType::NODIKA) {
+                        $config = new NodikaConfiguration(json_decode($lastGeneration->getDistributionConfigurationJson()));
+                        $row[] = "nodika";
+                    } else {
+                        $config = new RoundRobinConfiguration(json_decode($lastGeneration->getDistributionConfigurationJson()));
+                        $row[] = "round robin";
+                    }
+                    $row[] = $config->lengthInHours;
+                    $row[] = $config->startDateTime->format("d.m.Y H:s");
+                    $row[] = $config->endDateTime->format("d.m.Y H:s");
+
+                    $data[] = $row;
+                }
+            }
+
+        }
+
+        return $this->renderCsv("summary.csv", [
+            "person id",
+            "study group",
+            "organisation id",
+            "time",
+            "anzahl praxen erfasst",
+            "multiple generations",
+            "used algorithm",
+            "used duration",
+            "used start",
+            "used end"
+        ], $data);
     }
 
     /**
