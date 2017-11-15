@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Controller\Administration\Organisation\EventLine\Generate\RoundRobinController;
 use AppBundle\Controller\Base\BaseController;
+use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Newsletter;
@@ -144,10 +145,18 @@ class StudyController extends BaseController
     {
         /* @var UserEventLog[] $logs */
         $logs = $this->getDoctrine()->getRepository("AppBundle:UserEventLog")->findBy([], ["occurredAtDateTime" => "ASC"]);
+        /* @var Event[] $events */
+        $eventLines = $this->getDoctrine()->getRepository("AppBundle:EventLine")->findBy([]);
         /* @var UserEventLog[][] $logsByPerson */
         $logsByPerson = [];
         foreach ($logs as $log) {
             $logsByPerson[$log->getPerson()->getId()][] = $log;
+        }
+
+        /* @var Event[][] $eventsByEventLine */
+        $eventsByEventLine = [];
+        foreach ($eventLines as $eventLine) {
+            $eventsByEventLine[$eventLine->getId()] = $eventLine->getEvents();
         }
 
         $data = [];
@@ -162,35 +171,78 @@ class StudyController extends BaseController
                 $row[] = $organisation->getId();
 
                 /* @var UserEventLog[¨$logs */
-                if (isset($logsByPerson[$person->getId()])) {
-                    $logsOfPerson = $logsByPerson[$person->getId()];
-                    $first = $logsOfPerson[0];
-                    $last = null;
-                    foreach ($logsOfPerson as $log) {
-                        if (strpos($log->getValue(), "/finish") > 0) {
-                            $last = $log;
-                            break;
-                        }
-                    }
-                    if ($last != null)
-                        $row[] = $last->getOccurredAtDateTime()->getTimestamp() - $first->getOccurredAtDateTime()->getTimestamp();
-                    else {
-                        $row[] = "-";
-                    }
-                } else {
-                    $row[] = "-";
+                if (!isset($logsByPerson[$person->getId()])) {
+                    continue;
                 }
+
+                $logsOfPerson = $logsByPerson[$person->getId()];
+                $setupStart = null;
+                $firstMember = null;
+                $lastMember = null;
+                $firstEventLine = null;
+                $lastEventLine = null;
+                $firstGeneration = null;
+                $lastGeneration = null;
+                $setupEnd = null;
+                foreach ($logsOfPerson as $log) {
+                    if (strpos($log->getValue(), "/setup") > 0) {
+                        if ($setupStart == null) {
+                            $setupStart = $log;
+                        }
+                        $setupEnd = $log;
+                    }
+                    if (
+                        (strpos($log->getValue(), "/members/new") > 0) ||
+                        (strpos($log->getValue(), "/members/") > 0 && strpos($log->getValue(), "/administer"))
+                    ) {
+                        if ($firstMember == null) {
+                            $firstMember = $log;
+                        }
+                        $lastMember = $log;
+                    } else if (
+                        (strpos($log->getValue(), "/event_line/new") > 0) ||
+                        (strpos($log->getValue(), "/event_line/") > 0 && strpos($log->getValue(), "/administer"))
+                    ) {
+                        if ($firstEventLine == null) {
+                            $firstEventLine = $log;
+                        }
+                        $lastEventLine = $log;
+                    } else if (strpos($log->getValue(), "/generate") > 0) {
+                        if ($firstGeneration == null) {
+                            $firstGeneration = $log;
+                        }
+                        $lastGeneration = $log;
+                    } else if (strpos($log->getValue(), "/finish") > 0) {
+                        $setupEnd = $log;
+                        break;
+                    }
+                }
+
+                if ($setupStart == null || $setupEnd == null ||
+                    $firstMember == null || $lastMember == null ||
+                    $firstEventLine == null || $lastEventLine == null ||
+                    $firstGeneration == null || $lastGeneration == null) {
+                    continue;
+                }
+
+
+                $row[] = $setupEnd->getOccurredAtDateTime()->getTimestamp() - $setupStart->getOccurredAtDateTime()->getTimestamp();
+                $row[] = $lastMember->getOccurredAtDateTime()->getTimestamp() - $firstMember->getOccurredAtDateTime()->getTimestamp();
+                $row[] = $lastEventLine->getOccurredAtDateTime()->getTimestamp() - $firstEventLine->getOccurredAtDateTime()->getTimestamp();
+                $row[] = $lastGeneration->getOccurredAtDateTime()->getTimestamp() - $firstGeneration->getOccurredAtDateTime()->getTimestamp();
 
                 $row[] = count($organisation->getMembers());
 
                 $generations = [];
+                $eventLineIds = [];
                 foreach ($organisation->getEventLines() as $eventLine) {
                     $generations = array_merge($eventLine->getEventLineGenerations()->toArray(), $generations);
+                    $eventLineIds[] = $eventLine->getId();
                 }
+                $row[] = count($eventLineIds);
                 $row[] = count($generations);
 
                 if (count($generations) > 0) {
-
                     /* @var EventLineGeneration $lastGeneration */
                     $lastGeneration = $generations[count($generations) - 1];
                     if ($lastGeneration->getDistributionType() == DistributionType::NODIKA) {
@@ -204,23 +256,69 @@ class StudyController extends BaseController
                     $row[] = $config->startDateTime->format("d.m.Y H:s");
                     $row[] = $config->endDateTime->format("d.m.Y H:s");
 
+                    $decemberStartDate = new \DateTime("01.12.2017 00:01");
+                    $decemberEndDate = new \DateTime("31.12.2017 23:59");
+                    $decemberRandomDates = [new \DateTime("10.12.2017 00:00"), new \DateTime("15.12.2017 00:00"), new \DateTime("20.12.2017 00:00")];
+                    $decemberStart = false;
+                    $decemberEnd = false;
+                    $changeAtEight = true;
+                    $anyChangeAtEight = false;
+                    foreach ($eventLineIds as $eventLineId) {
+                        foreach ($eventsByEventLine[$eventLineId] as $event) {
+                            if ($event->getStartDateTime() < $decemberStartDate && $event->getEndDateTime() > $decemberStartDate) {
+                                $decemberStart = true;
+                            } else if ($event->getStartDateTime() < $decemberEndDate && $event->getEndDateTime() > $decemberEndDate) {
+                                $decemberEnd = true;
+                            }
+
+                            if ($event->getEndDateTime() > $decemberStartDate && $event->getEndDateTime() < $decemberEndDate) {
+                                $changeAtEight &= $event->getEndDateTime()->format("H:i") == "08:00";
+                                $anyChangeAtEight = true;
+                            }
+                            if ($event->getStartDateTime() > $decemberStartDate && $event->getStartDateTime() < $decemberEndDate) {
+                                $changeAtEight &= $event->getStartDateTime()->format("H:i") == "08:00";
+                                $anyChangeAtEight = true;
+                            }
+
+                            for ($i = 0; $i < count($decemberRandomDates); $i++) {
+                                if ($event->getEndDateTime() > $decemberRandomDates[$i] && $event->getStartDateTime() < $decemberRandomDates[$i]) {
+                                    unset($decemberRandomDates[$i]);
+                                    break;
+                                }
+                            }
+                            $decemberRandomDates = array_values($decemberRandomDates);
+                        }
+                    }
+
+                    $row[] = $decemberStart ? "yes" : "no";
+                    $row[] = $decemberEnd ? "yes" : "no";
+                    $row[] = count($decemberRandomDates) == 0 ? "yes" : "no";
+                    $row[] = $changeAtEight && $anyChangeAtEight ? "yes" : "no";
+
                     $data[] = $row;
                 }
             }
-
         }
 
         return $this->renderCsv("summary.csv", [
             "person id",
             "study group",
             "organisation id",
-            "time",
+            "start zu end zeit",
+            "praxiserfassung zeit",
+            "termingruppenzeit",
+            "generierungszeit",
             "anzahl praxen erfasst",
-            "multiple generations",
+            "anzahl termingruppen erfasst",
+            "anzahl generierungen",
             "used algorithm",
             "used duration",
             "used start",
-            "used end"
+            "used end",
+            "covered december start",
+            "covered december end",
+            "covered all of december",
+            "changed at 8:00"
         ], $data);
     }
 
